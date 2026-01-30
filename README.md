@@ -9,13 +9,13 @@ Built with **UIKit** using native iOS technologies.
 
 ## 📱 Screenshots
 
-| Today | History | Statistics | Settings |
-|------|--------|-----------|----------|
-| ![](Screens/today.png) | ![](Screens/history.png) | ![](Screens/statistics.png) | ![](Screens/settings.png) |
+| Today | Add Expense | History | Statistics | Settings 
+|------|--------|-----------|----------||------------|
+| ![](Screens/today.png) | ![](Screens/add_expense.png) | ![](Screens/history.png) | ![](Screens/statistics.png) | ![](Screens/settings.png) |
 
-| Add Expense |
-|------------|
-| ![](Screens/add_expense.png) |
+
+
+
 
 ---
 
