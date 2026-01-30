@@ -45,6 +45,7 @@ Built with **UIKit** using native iOS technologies.
 1. Clone the repository:
 ```bash
 git clone https://github.com/suni22/DailySpend.git
-Open DailySpend.xcodeproj in Xcode
-Run the app on a simulator or real device (iOS 15+)
+```
+2. Open DailySpend.xcodeproj in Xcode
+3. Run the app on a simulator or real device (iOS 15+)
 
