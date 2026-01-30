@@ -1,29 +1,57 @@
 import Foundation
 
-class ExpenseStore {
-    private var expenses: [Expense] = []
+final class ExpenseStore {
+    private(set) var expenses: [Expense] = []
     private let key: String = "expenses"
-    var change: (() -> Void)?
+    private let settingsStore: SettingsStore
+    var onChange: [() -> Void] = []
+    
+    init(settingsStore: SettingsStore) {
+        self.settingsStore = settingsStore
+    }
+    
+    func getExpenses() -> [Expense] { expenses }
+    
     func add(_ expense: Expense) {
         expenses.append(expense)
         save()
-        change?()
+        notify()
     }
-    func todayTotal() -> Decimal {
-        let todayExpenses = expenses.filter { Calendar.current.isDateInToday($0.date)}
-        let total = todayExpenses.reduce( Decimal.zero) {$0 + $1.amount}
+    
+    func delete(id: UUID) {
+        expenses.removeAll { $0.id == id }
+        save()
+        notify()
+    }
+    
+    private func notify() {
+        onChange.forEach { $0() }
+    }
+    
+    func todayTotal() -> Double {
+        var todayExpenses = expenses.filter { Calendar.current.isDateInToday($0.date)}
+        todayExpenses = todayExpenses.filter { $0.amount.currency == settingsStore.getCurrentCurrency() }
+        let total = todayExpenses.reduce( Double.zero) {$0 + $1.amount.value}
         return total
     }
+    
     func save() {
         UserDefaults.standard.set(try? JSONEncoder().encode(expenses), forKey: key)
     }
+    
     func load() {
-        guard let data = UserDefaults.standard.data(forKey: key) else {
-            expenses = []
-            change?()
-            return
+        if let data = UserDefaults.standard.data(forKey: "expenses"),
+           let decoded = try? JSONDecoder().decode([Expense].self, from: data) {
+            expenses = decoded
         }
-        expenses = (try? JSONDecoder().decode([Expense].self, from: data)) ?? []
-        change?()
+        notify()
+    }
+    
+    func getLastExpense() -> Expense {
+        if let last = expenses.last {
+            return last
+        } else {
+            return Expense(title: "There are no expenses yet", amount: Amount(value: 0.00, currency: settingsStore.getCurrentCurrency()), date: Date(), category: ExpenseCategory.other)
+        }
     }
 }
