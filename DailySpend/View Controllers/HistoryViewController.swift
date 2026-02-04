@@ -83,6 +83,7 @@ extension HistoryViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.configure(expense: expense)
+        cell.selectionStyle = .none
         return cell
     }
     
